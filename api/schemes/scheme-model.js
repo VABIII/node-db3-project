@@ -55,16 +55,17 @@ function add(scheme) {
 
 function addStep(scheme_id, step) {
 
-  return db('steps').insert({
-    ...step,
-    scheme_id
-  })
-      .then(() => {
-        return db('steps AS st')
-            .join('schemes AS sc', 'step_number', 'instructions', 'scheme_name')
-            .orderBy('step_number', 'ASC')
-            .where('sc.scheme_id', scheme_id)
-      })
+    return db('steps').insert({
+        ...step,
+        scheme_id
+    })
+        .then(() => {
+            return db('steps AS st')
+                .join('schemes AS sc', 'sc.scheme_id','st.scheme_id' )
+                .select('step_id', 'step_number', 'instructions', 'scheme_name')
+                .orderBy('step_number', 'ASC')
+                .where('sc.scheme_id', scheme_id)
+        })
 }
 
 module.exports = {
