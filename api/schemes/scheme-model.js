@@ -10,37 +10,38 @@ function find() { // EXERCISE A
 }
 
 async function findById(scheme_id) {
-  const rows = await db('schemes AS sc')
-      .leftJoin('steps AS st','sc.scheme_id', 'st.scheme_id')
-      .select('sc.scheme_name','st.*')
-      .where('scheme_id', scheme_id)
-      .orderBy('st.step_number', 'ASC')
+    const rows = await db('schemes AS sc')
+        .leftJoin('steps AS st', 'sc.scheme_id', 'st.scheme_id')
+        .select('sc.scheme_name', 'st.*')
+        .where('sc.scheme_id', scheme_id)
+        .orderBy('st.step_number', 'ASC')
 
-  const result = {
-    scheme_id: rows[0].scheme_id,
-    scheme_name: rows[0].scheme_name,
-    steps: (rows[0].step_number > 0) ?
-        rows.map(scheme => {
-          return ({
-            step_id: scheme.step_id,
-            step_number: scheme.step_number,
-            instructions: scheme.instructions
-          })
-        }) : []
-  }
-  return result
+    const result =  {
+        scheme_id: rows[0].scheme_id,
+        scheme_name: rows[0].scheme_name,
+        steps: (rows[0].step_number  > 0) ?
+            rows.map(scheme => {
+                return ({
+                    step_id: scheme.step_id,
+                    step_number: scheme.step_number,
+                    instructions: scheme.instructions
+                })
+            }) : []
+    }
+
+    return result
 }
 
 async  function findSteps(scheme_id) {
-  const rows = db('schemes AS sc')
-      .leftJoin('steps AS st', 'sc.scheme_id', 'st.scheme_id')
-      .select('st.step_id', 'st.step_number', 'instructions', 'sc.scheme_name')
-      .where('sc.scheme_id', scheme_id)
-      .orderBy('st.step_number')
+    const rows = await db('schemes AS sc')
+        .leftJoin('steps AS st', 'sc.scheme_id', 'st.scheme_id')
+        .select('st.step_id', 'st.step_number', 'instructions', 'sc.scheme_name')
+        .where('sc.scheme_id', scheme_id)
+        .orderBy('step_number')
 
-  if (!rows[0].step_id) return []
+    if (!rows[0].step_id) return []
 
-  return rows
+    return rows
 }
 
 function add(scheme) {
